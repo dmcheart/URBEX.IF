@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URBEX.IF</title>
+    <link rel="stylesheet" href="Library/css/style.css?v=7">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+
+    <div id="preloader">
+        <div class="loader-content">
+            <h1 class="loader-logo">URBEX<span>.IF</span></h1>
+            <div class="loader-bar">
+                <div class="loader-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="app-container">
+        <header class="main-header">
+            <div class="header-container">
+                <a href="#" class="brand-logo">URBEX<span>.IF</span></a>
+
+                <div class="header-controls">
+                    <div class="lang-switch" id="lang-switch">
+                        <button type="button" class="lang-current" id="lang-current" aria-haspopup="true" aria-expanded="false">
+                            <img class="lang-flag-img" id="lang-current-flag" src="Library/images/flags/en/32.png" alt="">
+                            <span class="lang-label" id="lang-current-label" data-i18n="languageLabel">Language</span>
+                            <span class="lang-caret">▾</span>
+                        </button>
+                        <ul class="lang-dropdown" id="lang-dropdown" role="menu">
+                            <li role="none">
+                                <button type="button" class="lang-option" data-lang="en" role="menuitem">
+                                    <img class="lang-flag-img" src="Library/images/flags/en/32.png" alt="">
+                                    <span class="lang-option-code">EN</span>
+                                </button>
+                            </li>
+                            <li role="none">
+                                <button type="button" class="lang-option" data-lang="uk" role="menuitem">
+                                    <img class="lang-flag-img" src="Library/images/flags/ua/32.png" alt="">
+                                    <span class="lang-option-code">UA</span>
+                                </button>
+                            </li>
+                            <li role="none">
+                                <button type="button" class="lang-option" data-lang="ru" role="menuitem">
+                                    <img class="lang-flag-img" src="Library/images/flags/ru/32.png" alt="">
+                                    <span class="lang-option-code">RU</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="content-wrapper">
+            <section class="map-section">
+                <div class="map-search" id="map-search">
+                    <span class="map-search-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
+                    <input type="text" id="map-search-input" class="map-search-input" autocomplete="off" data-i18n-placeholder="searchPlaceholder" placeholder="Search objects by name...">
+                    <div class="map-search-results" id="map-search-results"></div>
+                </div>
+                <div class="map-layout">
+                    <aside id="object-panel" class="object-panel">
+                        <div class="object-panel-empty" data-i18n="objPanelEmpty">Select an object on the map to see details.</div>
+                    </aside>
+                    <div class="map-stage">
+                        <div id="site-map" class="site-map"></div>
+
+                        <div class="map-filter" id="map-filter">
+                            <button type="button" class="map-filter-toggle" id="map-filter-toggle" aria-haspopup="true" aria-expanded="false">
+                                <span class="map-filter-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/><line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/><line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/><line x1="14" x2="14" y1="2" y2="6"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="16" x2="16" y1="18" y2="22"/></svg></span>
+                                <span class="map-filter-label" data-i18n="filterButtonLabel">Filter</span>
+                            </button>
+                            <div class="map-filter-panel" id="map-filter-panel" role="menu">
+                                <div class="map-filter-panel-title" data-i18n="filterTitle">Object types</div>
+                                <label class="map-filter-option">
+                                    <input type="checkbox" class="map-filter-check" data-type="tower" checked>
+                                    <span class="map-filter-emoji" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.9 16.1C1 12.2 1 5.8 4.9 1.9"/><path d="M7.8 4.7a6.14 6.14 0 0 0-.8 7.5"/><circle cx="12" cy="9" r="2"/><path d="M16.2 4.8c2 2 2.26 5.11.8 7.47"/><path d="M19.1 1.9a9.96 9.96 0 0 1 0 14.1"/><path d="M9.5 18h5"/><path d="m8 22 4-11 4 11"/></svg></span>
+                                    <span data-i18n="objTypeTower">Tower</span>
+                                    <span class="map-filter-count" data-type-count="tower">0</span>
+                                </label>
+                                <label class="map-filter-option">
+                                    <input type="checkbox" class="map-filter-check" data-type="shelter" checked>
+                                    <span class="map-filter-emoji" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg></span>
+                                    <span data-i18n="objTypeShelter">Bomb Shelter</span>
+                                    <span class="map-filter-count" data-type-count="shelter">0</span>
+                                </label>
+                                <label class="map-filter-option">
+                                    <input type="checkbox" class="map-filter-check" data-type="abandoned" checked>
+                                    <span class="map-filter-emoji" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span>
+                                    <span data-i18n="objTypeAbandoned">Abandoned Object</span>
+                                    <span class="map-filter-count" data-type-count="abandoned">0</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="main-footer">
+            <div class="footer-container">
+                <div class="footer-meta">
+                    <p class="footer-copy" data-i18n="footerCopy">© 2026 URBEX.IF. All rights reserved.</p>
+                    <p class="footer-creator">
+                        <span data-i18n="footerCreatedBy">Site created by</span>:
+                        <a href="https://www.tiktok.com/@dmcheart" target="_blank" rel="noopener noreferrer" class="footer-creator-link">@dmcheart</a>
+                    </p>
+                </div>
+                <nav class="footer-links" aria-label="Legal">
+                    <button type="button" class="footer-link" data-modal="agreement" data-i18n="navAgreement">User Agreement</button>
+                    <span class="footer-divider" aria-hidden="true"></span>
+                    <button type="button" class="footer-link" data-modal="licence" data-i18n="navLicence">Licence</button>
+                    <span class="footer-divider" aria-hidden="true"></span>
+                    <button type="button" class="footer-link" data-modal="contacts" data-i18n="navContacts">Contacts</button>
+                    <span class="footer-divider" aria-hidden="true"></span>
+                    <button type="button" id="nav-submit" class="footer-link footer-link-highlight">
+                    <svg class="footer-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+                    <span data-i18n="navSubmit">Suggest an object</span>
+                </button>
+                </nav>
+            </div>
+        </footer>
+    </div>
+
+    <div id="info-modal" class="modal">
+        <div class="modal-content agreement-modal">
+            <span class="close-modal">&times;</span>
+            <div id="agreement-body">
+                <div class="agreement-loading">Loading...</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="object-modal" class="modal">
+        <div class="modal-content object-modal-content">
+            <span class="close-modal" data-close-target="object-modal">&times;</span>
+            <div id="object-modal-body"></div>
+        </div>
+    </div>
+
+    <div id="lightbox-modal" class="modal lightbox-modal">
+        <span class="close-modal" data-close-target="lightbox-modal">&times;</span>
+        <img id="lightbox-image" src="" alt="">
+    </div>
+
+    <div id="submit-modal" class="modal">
+        <div class="modal-content agreement-modal submit-modal-content">
+            <span class="close-modal" data-close-target="submit-modal">&times;</span>
+            <div class="agreement-header">
+                <div class="agreement-title" data-i18n="submitModalTitle">Suggest an object</div>
+            </div>
+            <p class="submit-intro" data-i18n="submitIntro">Fill in what you know below, then send it to the administrator on Telegram. Photos aren't uploaded from here — attach them yourself in the Telegram message.</p>
+
+            <div class="submit-form">
+                <label class="submit-label" for="submit-name" data-i18n="submitFieldName">Object name</label>
+                <input type="text" id="submit-name" class="submit-input" maxlength="120">
+
+                <label class="submit-label" for="submit-type" data-i18n="submitFieldType">Object type</label>
+                <select id="submit-type" class="submit-input">
+                    <option value="tower" data-i18n="objTypeTower">Tower</option>
+                    <option value="shelter" data-i18n="objTypeShelter">Bomb Shelter</option>
+                    <option value="abandoned" data-i18n="objTypeAbandoned">Abandoned Object</option>
+                </select>
+
+                <label class="submit-label" for="submit-description" data-i18n="submitFieldDescription">Description</label>
+                <textarea id="submit-description" class="submit-input submit-textarea" rows="3" maxlength="600"></textarea>
+
+                <label class="submit-label" for="submit-closed-year" data-i18n="submitFieldClosedYear">Closed in (year, optional)</label>
+                <input type="number" id="submit-closed-year" class="submit-input" min="1800" max="2100" inputmode="numeric">
+
+                <label class="submit-label" for="submit-coords" data-i18n="submitFieldCoords">Coordinates</label>
+                <input type="text" id="submit-coords" class="submit-input" data-i18n-placeholder="submitCoordsPlaceholder" placeholder="Paste full coordinates, e.g. 48.9226, 24.7111">
+
+                <label class="submit-label" for="submit-photos" data-i18n="submitFieldPhotos">Photos (up to 4)</label>
+                <input type="file" id="submit-photos" class="submit-input submit-file" accept="image/*" multiple>
+                <div id="submit-photos-preview" class="submit-photos-preview"></div>
+                <p class="submit-hint submit-hint-danger" data-i18n="submitFieldPhotosHint">Photos aren't sent automatically — attach the same files yourself when sending the message.</p>
+
+                <label class="submit-notify-row" for="submit-notify-me">
+                    <input type="checkbox" id="submit-notify-me" class="submit-notify-check">
+                    <span data-i18n="submitFieldNotify">Credit me as the author</span>
+                </label>
+                <p class="submit-hint" id="submit-notify-hint" data-i18n="submitNotifyHintOff">Off — the object will be listed as added incognito.</p>
+
+                <div class="submit-author-fields" id="submit-author-fields">
+                    <label class="submit-label" for="submit-nickname" data-i18n="submitFieldNickname">Your nickname</label>
+                    <input type="text" id="submit-nickname" class="submit-input" maxlength="60">
+                    <p class="submit-error-msg" id="submit-nickname-error" data-i18n="submitNicknameRequired">Enter a nickname, or turn off "Credit me as the author".</p>
+
+                    <label class="submit-label" for="submit-tiktok" data-i18n="submitFieldTiktok">Your TikTok (optional)</label>
+                    <input type="text" id="submit-tiktok" class="submit-input" placeholder="@username">
+
+                    <label class="submit-label" for="submit-youtube" data-i18n="submitFieldYoutube">Your YouTube (optional)</label>
+                    <input type="text" id="submit-youtube" class="submit-input" placeholder="@channel">
+                </div>
+
+                <p class="submit-hosting-note" data-i18n="submitHostingNote">The site has no paid hosting for a backend, so nothing here is sent or saved automatically — everything above is only put into a message for you to send to the administrator on Telegram yourself.</p>
+
+                <div class="submit-actions">
+                    <button type="button" id="submit-copy-btn" class="submit-btn submit-btn-secondary" data-i18n="submitButtonCopy">Copy text</button>
+                    <button type="button" id="submit-telegram-btn" class="submit-btn submit-btn-primary" data-i18n="submitButtonTelegram">Send via Telegram</button>
+                </div>
+                <p id="submit-copied-msg" class="submit-copied-msg" data-i18n="submitCopied">Copied to clipboard.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="cookie-banner" class="cookie-banner">
+        <p class="cookie-text" data-i18n="cookieText">This site uses cookies to remember your language preference.</p>
+        <button type="button" id="cookie-accept" class="cookie-accept" data-i18n="cookieAccept">Accept</button>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="Library/js/translations.js?v=7"></script>
+    <script src="Library/js/agreement-data.js?v=7"></script>
+    <script src="Library/js/licence-data.js?v=7"></script>
+    <script src="Library/js/contacts-data.js?v=7"></script>
+    <script src="Library/js/objects-data.js?v=7"></script>
+    <script src="Library/js/script.js?v=7"></script>
+</body>
+</html>
